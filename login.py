@@ -29,7 +29,7 @@ response=urlopener.open(urllib2.Request(address,urllib.urlencode(loginform))).re
 
 loggedin_form={'sessionid':sessionid,'action':'Refresh'}
 def refresh():
-    threading.Timer(4.0,refresh).start()
+    threading.Timer(250.0,refresh).start()
     response=urlopener.open(urllib2.Request(address,urllib.urlencode(loggedin_form))).read()
 
 refresh()
