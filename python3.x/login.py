@@ -1,30 +1,38 @@
-#! /usr/bin/python
+#! /usr/bin/python3
 
 #Import some modules to scare newbies, or may be to get things done.
-from BeautifulSoup import BeautifulSoup as soup  #Ah! me love soup!
-import urllib.request, urllib.error, urllib.parse,urllib.request,urllib.parse,urllib.error,sys,threading
-from getpass import getpass
+# bs4 is BeautifulSoup version4, an awesome HTML/XML parser.
+from bs4 import BeautifulSoup as soup  #Ah! me love soup!
+import urllib.request, urllib.error, urllib.parse
+#import sys
+from getpass import getpass,GetPassWarning
+from threading import Timer as Repeater
 
 #Define a special confusing useless(?) wrapper function to accept user input.
-def read_input(prompt):
-    while True:
+def read_input(prompt,retries=3):
+    while retries>0:
         try:
             inp=input(prompt)
-            return inp
+            if inp!='':
+                return inp
+            else:
+                print("\nI demand input!!!\nHow dare you give an empty reply?")
+                i=i-1
+                continue 
         except EOFError:
-            print("""
-You just broke my heart. Can't I even expect some input?
-Still, I choose to give you another chance.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-""")
+            print("\nI demand input!!!\nHow dare you throw a EOF at me?")
+            i=i-1
+    print("RAGEQUIT!!")
+    exit()
 	
 proxycat=read_input("Enter proxy: http://www.cc.iitd.ernet.in/cgi-bin/proxy.")
 userid=read_input("Enter your userid : ")
 
 try:
     passwd=getpass("Enter your password : ")
+    # This tries its best not to echo password
 except GetPassWarning:
-    pass
+    print("Free advice: Cover your screen, just in case..")
 
 proxyserv={'btech':'22','dual':'62','mtech':'62'}
 # Check if proxycat is known to us.
@@ -57,7 +65,7 @@ response=urlopener.open(urllib.request.Request(address,urllib.parse.urlencode(lo
 
 loggedin_form={'sessionid':sessionid,'action':'Refresh'}
 def refresh():
-    threading.Timer(250.0,refresh).start()
+    Repeater(250.0,refresh).start()
     response=urlopener.open(urllib.request.Request(address,urllib.parse.urlencode(loggedin_form))).read()
     print("Heartbeat sent")
 
