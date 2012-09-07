@@ -14,13 +14,17 @@ This is a simple python script, that asks for your proxy category, userid, and p
 ###How?
 _how, of all the infinite possible ways, should I use it?_  
 
-Run it. Or eat it for dinner.
-P.S: You'll need python3.x
+Run it. Or eat it for dinner.  
+P.S: You'll need python3.x , and there is a cool configuration thingy available.
 
 ###Trust?
 _can you be trusted? What if you are stealing my passwords?_  
 
 Good Lord!! Read the source. If you are lazy enough not to read the source, and skeptic enough not to trust, maintain a distance of 2.45 meters from my code.
+
+_umm.. why 2.45 meters, sir?_
+
+I'd tell you, if I knew. Seriously!
 
 ###Legal?
 _can I copy this?_  
