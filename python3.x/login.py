@@ -8,13 +8,16 @@
 
 # Import some modules to scare newbies, or may be to get things done.
 # bs4 is BeautifulSoup version4, an awesome HTML/XML parser.
-from bs4 import BeautifulSoup as soup,SoupStrainer as limiter
+from bs4 import BeautifulSoup as soup #,SoupStrainer as limiter
 import urllib.request, urllib.error, urllib.parse
 import sys
 from getpass import getpass,GetPassWarning
 import time
+#import argparse
+import configparser
 # TODO : If modules don't exist, offer to download them.
 
+# TODO : Argument parsing
 #Define a special confusing useless(?) wrapper function to accept user input.
 def read_input(prompt,retries=3):
     while retries>0:
@@ -32,25 +35,28 @@ def read_input(prompt,retries=3):
     print("RAGEQUIT!!") # :-(
     sys.exit(255)
 
-# TODO : Offer config file support.
-proxycat=read_input("Enter proxy: http://www.cc.iitd.ernet.in/cgi-bin/proxy.")
-userid=read_input("Enter your userid : ")
-
+# Configuration file parsing and setting variables
+config=configparser.ConfigParser()
+config.read('pyproxylogin.conf')
 try:
-    passwd=getpass("Enter your password : ")
-    # This tries its best not to echo password
-except GetPassWarning:
-    print("Free advice: Cover your screen, just in case..")
-
-proxyserv={'btech':'22','dual':'62','mtech':'62','faculty':'81'}
-# Check if proxycat is known to us. C'mon, you cant know everything. Ask if needed.
-try:
-    address='https://proxy'+proxyserv[proxycat]+'.iitd.ernet.in/cgi-bin/proxy.cgi'
-except KeyError:
-    print("It looks like I dont know what your proxy server is.")
-    print('https://proxyXX.iitd.ernet.in/cgi-bin/proxy.cgi')
-    proxyserv[proxycat]=read_input("The XX is : ")
-    address='https://proxy'+proxyserv[proxycat]+'.iitd.ernet.in/cgi-bin/proxy.cgi'
+    conf=config['PROXY']
+except KeyError as e:
+    config['PROXY']={}
+    conf=config['PROXY']
+finally:
+    proxycat=conf['proxycat'] if 'proxycat' in conf else read_input("Enter proxy: http://www.cc.iitd.ernet.in/cgi-bin/proxy.")
+    proxyserv=conf['proxyserv'] if 'proxyserv' in conf else read_input("The proxy server is : 10.10.78.")
+    address='https://proxy'+proxyserv+'.iitd.ernet.in/cgi-bin/proxy.cgi'
+    userid=conf['userid'] if 'userid' in conf else read_input("Enter your Userid : ")
+    if 'password' in conf:
+        print("WARNING: You have saved your password in PLAINTEXT!")
+        passwd=conf['password']
+    else:
+        try:
+            passwd=getpass("Enter your password : ")
+        # This tries its best not to echo password
+        except GetPassWarning:
+            print("Free advice: Cover your screen, just in case..")
 
 # Le Proxy handling system
 auto_proxy='http://www.cc.iitd.ernet.in/cgi-bin/proxy.'+proxycat
@@ -73,7 +79,7 @@ except Error as e:
 print("Login page loaded succesfully")
 
 # I'm Hungry. Make me a soup.
-htmlsoup=soup(html,parse_only=limiter("input"))
+htmlsoup=soup(html)
 sessionid=htmlsoup.input['value']
 # TODO : Exception handling. Add some intelligence buddy.
 print("The session id is : "+sessionid)
