@@ -4,7 +4,7 @@
 # Description : A python3 utility to log into IITD proxy servers.
 # Home        : http://phanimahesh.github.com/iitd-pyproxylogin
 # Blog        : http://phanimahesh.wordpress.com
-# Bugs        : Report bugs to phanimahesh.ee510 [at] ee.iitd.ac.in
+# Bugs        : Report bugs to ee5100549 [at] ee.iitd.ac.in OR iitd [at] phanimahesh.me
 
 # Import some modules to scare newbies, or may be to get things done.
 # bs4 is BeautifulSoup version4, an awesome HTML/XML parser.
@@ -27,11 +27,11 @@ def read_input(prompt,retries=3):
                 return inp
             else:
                 print("\nI demand input!!!\nHow dare you give an empty reply?")
-                i=i-1
+                retries=retries-1
                 continue 
         except EOFError:
             print("\nI demand input!!!\nHow dare you throw a EOF at me?")
-            i=i-1
+            retries=retries-1
     print("RAGEQUIT!!") # :-(
     sys.exit(255)
 
